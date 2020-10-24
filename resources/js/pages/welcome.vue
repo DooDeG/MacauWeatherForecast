@@ -49,18 +49,22 @@
       </div>
     </div>
     <hr class="bg-white">
-    <div class="flex overflow-auto">
-      <div v-for="e in forecast.weather36h" :key="e.id" class="text-center px-2 py-1 whitespace-no-wrap">
-        <div> {{ e.time }}時 </div>
-        <div> {{ e.weather }} </div>
-        <div> {{ e.temp }}° </div>
-      </div>
-      <!-- <ul id="example-1">
-        <li v-for="item in items" :key="item.message">
-          {{ item.message }}
-        </li>
-      </ul> -->
+    
+    <div class="flex flex-col overflow-auto whitespace-no-wrap ">
+        <div class="flex justify-start">
+            <div v-for="e in forecast.weather36h.time" :key="e.id" class="text-center py-1 ">
+                <div class="text-center" style="width: 80px;"> {{ e }}時 </div>
+            </div>
+        </div>
+          
+        <div class="flex justify-start">
+            <div v-for="e in w36h" :key="e.id" class="text-center py-1">
+                <div class="text-center" style="width: 80px;"> {{ e.weather }} </div>
+                <div class="text-center" style="width: 80px;"> {{ e.temp }}° </div>
+            </div> 
+        </div>
     </div>
+
     <hr class="bg-white">
     <div class="p-2">
       <div v-for="d in forecast.weatherFourDay" :key="d.id" class="whitespace-no-wrap">
@@ -85,20 +89,22 @@ export default {
       Ttemp: '',
       Ltemp: '',
       weatherimg: '',
-      weather36h: [
-        { }, { }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
-      ],
+      weather36h: {
+        time:[],
+        weather:[],
+        temp:[]
+      },
       // weather36h: [],
       weatherFourDay: []
 
     },
+    w36h:[],
     time36h: [],
     weatherinfo36h: [],
     temp36h: [],
     show: false,
-    map: new Map()
+    map: new Map(),
     // forecast: []
-
   }),
   created () {
     this.getTLTemp()
@@ -128,14 +134,12 @@ export default {
           console.log('Three hour:')
           console.log(res)
           this.forecast.temp = res.weather36h[0].temp
-
-          this.forecast.weather36h = res.weather36h
+          res.weather36h.forEach(element => {
+            this.forecast.weather36h.time.push(element.time.slice(11, 13))
+          });
+          this.forecast.weather36h.time[0] = '現'
+          this.w36h =res.weather36h
           console.log(this.forecast.weather36h)
-          this.forecast.weather36h[0].time = '現'
-          for (var i = 1; i <= 16; i++) {
-            this.forecast.weather36h[i].time = res.weather36h[i].time.slice(11, 13)
-          }
-
           // this.forecast.weather36h = JSON.parse(JSON.stringify(this.forecast.weather36h))
           // console.log(this.forecast.weather36h)
 
